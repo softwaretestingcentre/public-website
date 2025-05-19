@@ -23,7 +23,7 @@ Add `assertj-core` and [SerenityBDD](https://serenity-bdd.github.io/) as depende
 We want to check that available jobs are listed
 
 Create a new (test) class `WhenBrowsingJobs`
-```
+```java
 package com.softwaretestingcentre.testjobportal;
 import net.serenitybdd.annotations.Managed;
 import net.serenitybdd.junit5.SerenityJUnit5Extension;
@@ -48,7 +48,7 @@ public class WhenBrowsingJobs {
 We want to navigate to the Home Page
 
 Create a class `Navigate Actions`
-```
+```java
 package com.softwaretestingcentre.testjobportal;
 import net.serenitybdd.core.steps.UIInteractions;
 
@@ -60,7 +60,7 @@ public class NavigateActions extends UIInteractions {
 ```
 ### Interactions
 And another class `Browse Actions` which will allow us to access the job list
-```
+```java
 package com.softwaretestingcentre.testjobportal;
 import net.serenitybdd.core.steps.UIInteractions;
 
@@ -72,7 +72,7 @@ public class BrowseActions extends UIInteractions {
 ```
 ## PageComponents
 Finally, we add a PageComponent that allows us to interrogate the job listing page
-```
+```java
 package com.softwaretestingcentre.testjobportal;
 import net.serenitybdd.core.pages.PageComponent;
 
@@ -84,7 +84,7 @@ public class JobList extends PageComponent {
 ```
 ## Completing the Test
 Add the above helper classes to the test class and use them to write the test
-```
+```java
 package com.softwaretestingcentre.testjobportal;
 import net.serenitybdd.annotations.Managed;
 import net.serenitybdd.junit5.SerenityJUnit5Extension;
@@ -116,7 +116,7 @@ We should get `Process finished with exit code 0` in the Console.
 
 ## Adding BDD Steps and assertions
 We can add to the readability of the resulting test report by annotating the helper functions as BDD Steps
-```
+```java
 public class NavigateActions extends UIInteractions {
     @Step("Navigate to the home page")
     public void toJobPortalHomePage() {
@@ -132,7 +132,7 @@ public class BrowseActions extends UIInteractions {
 }
 ```
 Additionally, we wrap the test's assertion in `Serenity.reportThat()`
-```
+```java
     @Test
     void jobsShouldBeListed() {
         navigate.toJobPortalHomePage();
