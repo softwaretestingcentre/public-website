@@ -1,5 +1,5 @@
 ---
-title: "Observtions from 3 decades in QA"
+title: "Observations from 3 decades in QA"
 date: 2025-05-19
 ---
 I've been in QA for nearly 30 years, starting with manually checking the output of mainframe routines, through the rise of automation, the arrival of Agile and all the no-QA, no-code, AI fads along the way.
