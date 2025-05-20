@@ -53,8 +53,9 @@ package com.softwaretestingcentre.testjobportal;
 import net.serenitybdd.core.steps.UIInteractions;
 
 public class NavigateActions extends UIInteractions {
+    public String home = "http://localhost:3000/Home";
     public void toJobPortalHomePage() {
-        openUrl("http://localhost:3000/Home");
+        openUrl(home);
     }
 }
 ```
