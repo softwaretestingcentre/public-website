@@ -15,5 +15,6 @@ The main problems that I have seen in my career include:
 - Only performing QA via testing
 - Challenging design decisions too late
 - Short-term thinking as a substitute for Agility
+- Testing by Confrontation, rather than Collaboration
 
 By providing some real-world observations and lessons at Software Testing Centre, I hope to start putting this right.
