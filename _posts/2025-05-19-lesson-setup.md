@@ -114,7 +114,7 @@ public class WhenBrowsingJobs {
 Running the jobsShouldBeListed test now will open Chrome, browse to the job list and check that the expected text is displayed.
 We should get `Process finished with exit code 0` in the Console.
 
-## Adding BDD Steps and assertions
+## Adding BDD-style Steps and Assertions
 We can add to the readability of the resulting test report by annotating the helper functions as BDD Steps
 ```java
 public class NavigateActions extends UIInteractions {
@@ -179,6 +179,32 @@ Process finished with exit code 0
 ```
 And a full HTML report in the `target/site/serenity` folder with screenshots for each interaction
 ![image](https://github.com/user-attachments/assets/48af42cf-7351-4797-b020-7a02b684f0f0)
+
+# Summary
+In this lesson we: 
+- created a web application to use for testing
+- set up a test framework with helper classes
+- wrote and ran our first test
+- viewed the test report
+
+> ✔️ our Serenity BDD test framework is wired up correctly
+> 
+> ✔️ the test script uses our custom classes and Serenity methods, it does not call Selenium methods directly
+
+***It is bad practice to have test scripts that consist of endless lines of Selenium (or Playwright) commands.***
+
+***These commands should only appear in the low level interaction helper classes, around which we build our framework.***
+
+***The test scripts should abstract away any detail about the application, expressing the test in terms that a user can understand.***
+
+
+> ❗this is not testing user behaviour
+> 
+> ❗system tests should not check the website's structure
+>
+> ❗there are magic strings in test script and helper classes
+
+***This first example is only provided to check that the framework is building correctly, it is NOT an example of what we should be testing.***
 
 
 
