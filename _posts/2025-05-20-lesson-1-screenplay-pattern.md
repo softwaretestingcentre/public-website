@@ -31,7 +31,7 @@ Let's add a new test class to the features directory `WhenFilterJobs` which will
 We are going to introduce an Actor `John` as a jobseeker user.
 
 So the empty test class would look like this:
-```
+```java
 @ExtendWith(SerenityJUnit5Extension.class)
 class WhenFilterJobs {
     
@@ -46,7 +46,7 @@ class WhenFilterJobs {
 }
 ```
 As a first attempt, we can use the Serenity methods to perform the navigations and UI interactions that achieve the filtering task:
-```
+```java
     void filterFrontend() {
         john.attemptsTo(
                 Open.url(navigate.home),
@@ -56,7 +56,7 @@ As a first attempt, we can use the Serenity methods to perform the navigations a
     }
 ```
 And then John can ask what jobs are now showing and check they are all in the category "Frontend":
-```
+```java
     void filterFrontend() {
         john.attemptsTo(
                 Open.url(navigate.home),
