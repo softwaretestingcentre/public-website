@@ -1,4 +1,4 @@
-theme: minima
+remote-theme: "jekyll/minima@c6e74bb"
 title: Software Testing Centre
 author: Nick Tulett
 description: Lessons learned from 3 decades in QA
