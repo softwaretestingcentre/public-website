@@ -130,6 +130,7 @@ public class JobListPage extends PageObject {
 > ℹ️ Note that because this is a SinglePageApplication, the `@DefaultUrl` for this page is the base url for the entire application.
 >
 > ℹ️ Note also that we have only created Target objects for the elements we intend to use **now**
+> 
 > we don't try to map the entire set of elements for the page, because they will probably change as the application is being developed
 >
 > ✔️ using Serenity's Target objects rather than Selenium selectors allows us to augment them with descriptive text for more readable test reports
@@ -230,8 +231,11 @@ Given that our helper methods are parameterised it would be trivial to repeat th
 
 # Summary
 > ✔️ The Features and Scenarios are expressed in a common language understandable to both QA and business teams
+> 
 > ✔️ The test report shows the Actors and Tasks being performed and allows access to the details of the interactions with the application
+> 
 > ✔️ The framework has a clear deliniation between Business, Logic and Interaction layers
+> 
 > ✔️ We have parameterised helper methods that can be reused to cover many inputs and scenarios
 
 
