@@ -3,7 +3,7 @@ title: "Lesson 2 - Cucumber"
 date: 2025-05-21
 ---
 # Using a shared language for requirements and tests
-In the previous [Lesson 1 Screenplay Pattern](/_posts/2025-05-20-lesson-1-screenplay-pattern.md) article, we used the Screenplay Pattern to write a test with the concepts of:
+In the previous [Lesson 1 Screenplay Pattern](/2025/05/20/lesson-1-screenplay-pattern.html) article, we used the Screenplay Pattern to write a test with the concepts of:
 - Actors
 - Tasks
 - Questions
@@ -208,7 +208,7 @@ public class FilterJobs {
     public static Performable checkAllJobsMatchCategory(String category) {
         return Ensure.that(Text.ofEach(JobListPage.JOB_CATEGORY_LIST))
                 .allMatch("category",
-                        it -> it.contains(category));
+                        job -> job.contains(category));
     }
 
 }
