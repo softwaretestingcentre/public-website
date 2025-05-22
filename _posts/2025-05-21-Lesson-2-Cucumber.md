@@ -3,7 +3,7 @@ title: "Lesson 2 - Cucumber"
 date: 2025-05-21
 ---
 # Using a shared language for requirements and tests
-In the previous [Lesson 1 Screenplay Pattern](2025-05-20-lesson-1-screenplay-pattern.md) article, we used the Screenplay Pattern to write a test with the concepts of:
+In the previous [Lesson 1 Screenplay Pattern](/_posts/2025-05-20-lesson-1-screenplay-pattern.md) article, we used the Screenplay Pattern to write a test with the concepts of:
 - Actors
 - Tasks
 - Questions
@@ -16,6 +16,7 @@ This is not the kind of information that business experts need or want to see wh
 We can use BDD as a common language shared between QA and Business experts. 
 
 This involves splitting the test framework into 3 main layers:
+
 | Layer | Purpose | BDD representation |
 | ----- | ------- | ------------------ |
 | Business | expresses user journeys and expectations | Feature files and Scenarios |
@@ -27,17 +28,17 @@ We are going to delete the existing framework structure and start again based on
 ![image](https://github.com/user-attachments/assets/44a818ab-e8c3-425a-b153-29919139bbaf)
 
 # Writing a feature for the Business Layer
-We start by defining a feature - a user journey that describes a task they want to perform and their expectations about the result.
+We start by defining a **Feature** - a user journey that describes a task they want to perform and their expectations about the result.
 
 > ℹ️ Note that we do not specify any implemention details about the application at this stage.
 
-> ❗ A common mistake at this stage is to write steps as if they are user manual for the application - e.g. with fine detail about where to click and what to enter into the login fields, for instance.
+> ❗ A common mistake in writing Scenarios is to write steps as if they are user manual for the application - e.g. with fine detail about where to click and what to enter into the login fields, for instance.
 >
 > ❗ This is NOT what we want to see in a Feature file
 >
 > ❗ It alienates business users, makes tests heavily dependent on implementation details and will quickly become a maintenance nightmare
 
-With this in mind, we create a new feature file, `filter_jobs.feature` with one example scenario:
+With this in mind, we create a new feature file, `filter_jobs.feature` with one example **Scenario** provided by the business:
 ```gherkin
 Feature: Filter jobs based on category
   
@@ -47,7 +48,7 @@ Scenario: Only show Frontend jobs
   Then he only sees "Frontend" jobs
 ```
 # Step Definitions for the Logic layer
-Now we need to write Step Definitions to translate the above Given, When, Then steps into executable actions.
+Now we need to write Step Definitions to translate the above **Given**, **When**, **Then** steps into executable actions.
 
 Create a step definition file `FilterStepDefinitions.java` and add boilerplate implementations for these 3 steps:
 ```java
@@ -105,11 +106,11 @@ So that we can implement the step definitions fully, we need helper classes to m
 We are going to implement a number of helper classes to implement these steps. It might seem like overkill but it pays off in terms of reusability and maintenance.
 
 ## PageObjects
-One pattern that we can use to express these interactions is to create **PageObjects** that implement interactions on a per page basis, often a good model for web applications.
+One pattern that we can use to express these interactions is to create **PageObjects** that implement interactions on a per-page basis, often a good model for web applications.
 
 It is important that a PageObject only provides access to a web page and its elements - i.e. we do not implement any logic or interactions here.
 
-e.g. `JobListPage.java`
+We are going to write one PageObject for the Home page and one for the Jobs page:
 ```java
 package com.softwaretestingcentre.testjobportal.helpers;
 
@@ -118,6 +119,21 @@ import net.serenitybdd.core.pages.PageObject;
 import net.serenitybdd.screenplay.targets.Target;
 
 @DefaultUrl("https://stc-job-portal.netlify.app/")
+public class HomePage extends PageObject {
+    public static Target NAVBAR_LINK = Target.the("Page {0}")
+            .locatedBy("//a[text()='{0}']");
+}
+```
+This allows us to access the navbar links at the top of the page  
+![image](https://github.com/user-attachments/assets/a329d294-0903-4383-947e-8c9838f03e89)
+
+```java
+package com.softwaretestingcentre.testjobportal.helpers;
+
+import net.serenitybdd.annotations.DefaultUrl;
+import net.serenitybdd.core.pages.PageObject;
+import net.serenitybdd.screenplay.targets.Target;
+
 public class JobListPage extends PageObject {
     public static Target JOB_FILTER = Target.the("filter category {0}")
             .locatedBy("//li[text()='{0}']");
@@ -127,16 +143,28 @@ public class JobListPage extends PageObject {
 
 }
 ```
-> ℹ️ Note that because this is a SinglePageApplication, the `@DefaultUrl` for this page is the base url for the entire application.
+This gives us the Filter component
+
+![image](https://github.com/user-attachments/assets/b6ab8c05-288d-4956-924a-c66ac71525d8)
+
+And the Category text in each job listing
+
+![image](https://github.com/user-attachments/assets/571681cf-a6c2-4a7b-b62f-dafe98e2c4f9)
+
+> ℹ️ Because this is a React Single Page Application, we only need to declare a `@DefaultURL` on the Home PageObject
 >
 > ℹ️ Note also that we have only created Target objects for the elements we intend to use **now**
 > 
-> we don't try to map the entire set of elements for the page, because they will probably change as the application is being developed
+> ❗ We don't try to map the entire set of elements for the page, because they will probably change as the application is being developed
 >
-> ✔️ using Serenity's Target objects rather than Selenium selectors allows us to augment them with descriptive text for more readable test reports
+> ✔️ Using Serenity's Target objects rather than Selenium selectors allows us to augment them with descriptive text for more readable test reports
+>
+> ✔️ We are also able to use [Dynamic Targets](https://serenity-bdd.github.io/docs/screenplay/screenplay_webdriver#using-dynamic-targets) - they can take parameters using the `.of()` method, as we shall see later
 
-## Helper classes
-We need a method that allows us to navigate to the job list page, so we create a class `NavigateTo.java`:
+## Interaction Helper classes
+As well as the PageObject class, we need helper classes that perform interactions with the application.
+
+We need a method that allows us to navigate to the job list (or any) page, so we create a class `NavigateTo.java`:
 ```java
 package com.softwaretestingcentre.testjobportal.helpers;
 
@@ -144,22 +172,21 @@ import net.serenitybdd.screenplay.Performable;
 import net.serenitybdd.screenplay.Task;
 import net.serenitybdd.screenplay.actions.Click;
 import net.serenitybdd.screenplay.actions.Open;
-import net.serenitybdd.screenplay.targets.Target;
 
 public class NavigateTo {
 
-    public static Performable theJobListPage() {
-        return Task.where("{0} opens the Job list page",
-                Open.browserOn().the(JobListPage.class),
-                Click.on(Target.the("Browse Jobs button")
-                        .locatedBy("[data-testid='btn']"))
+    public static Performable pageByLink(String pageName) {
+        return Task.where("{0} opens the " + pageName + " page",
+                Open.browserOn().the(HomePage.class),
+                Click.on(HomePage.NAVBAR_LINK.of(pageName))
         );
-    }
 
+    }
 }
 ```
-For now this just has a single function that opens the home page and clicks the button that takes us to the job list.
+> ℹ️ This allows us to navigate using links in the navbar
 
+## Logic Layer Task helper classes
 Now we want another helper class to do filtering tasks, `FilterJobs.java`:
 ```java
 package com.softwaretestingcentre.testjobportal.helpers;
@@ -186,10 +213,10 @@ public class FilterJobs {
 
 }
 ```
-This provides a Task to do the filtering and an Ensure clause to check that the filtering has worked.
+> ℹ️ This provides a **Task** to do the filtering and an **Ensure** clause to check that the filtering has worked.
 
 ## Full Step Definitions
-Now we can use these helper classes to complete Step Definitions for this Scenario:
+Now we can use these helper classes to complete the Step Definitions for this Scenario:
 ```java
 public class FilterStepDefinitions {
 
@@ -210,24 +237,29 @@ public class FilterStepDefinitions {
 
 }
 ```
+> ✔️ Note that even at this level, the Step Definitions read like a DSL that the Business should be able to understand
 
 # Full BDD Test Report
 Now when we run the test, we can expand the report to see the full detail of the tasks and any underlying interactions:
 ![image](https://github.com/user-attachments/assets/3405ce3a-e274-4681-ba55-9ffb1ad8f04c)
 
-# Reusability
-Given that our helper methods are parameterised it would be trivial to repeat the test for different inputs, e.g.
+# Iterating on the Requirements
+We can go back to the Business now to gather all the rules that pertain to job filtering and identify more test cases.
+
+Given that our helper methods are parameterised it is trivial to repeat the test for different inputs.
 ```gherkin
   Scenario Outline: Filter jobs by category
     Given John is browsing jobs
     When he filters on "<Category>"
     Then he only sees "<Category>" jobs
     Examples:
-      | Category |
-      | Frontend |
-      | Backend  |
+      | Category          |
+      | Frontend          |
+      | Backend           |
+      | Devops            |
+      | Full Stack        |
+      | Digital Marketing |
 ```
-
 
 # Summary
 > ✔️ The Features and Scenarios are expressed in a common language understandable to both QA and business teams
@@ -236,7 +268,7 @@ Given that our helper methods are parameterised it would be trivial to repeat th
 > 
 > ✔️ The framework has a clear deliniation between Business, Logic and Interaction layers
 > 
-> ✔️ We have parameterised helper methods that can be reused to cover many inputs and scenarios
+> ✔️ We have parameterised helper methods that can be reused to cover many inputs and scenarios, without having to write new test code
 
 
 
