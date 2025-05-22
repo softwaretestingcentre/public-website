@@ -121,7 +121,7 @@ import net.serenitybdd.screenplay.targets.Target;
 @DefaultUrl("https://stc-job-portal.netlify.app/")
 public class HomePage extends PageObject {
     public static Target NAVBAR_LINK = Target.the("Page {0}")
-            .locatedBy("//a[text()='{0}']");
+            .locatedBy("//nav//a[.='{0}']");
 }
 ```
 This allows us to access the navbar links at the top of the page  
@@ -135,11 +135,12 @@ import net.serenitybdd.core.pages.PageObject;
 import net.serenitybdd.screenplay.targets.Target;
 
 public class JobListPage extends PageObject {
+
     public static Target JOB_FILTER = Target.the("filter category {0}")
-            .locatedBy("//li[text()='{0}']");
+            .locatedBy("//*[@class='job-category']//li[.='{0}']");
 
     public static Target JOB_CATEGORY_LIST = Target.the("job list")
-            .locatedBy(".job-detail>.category");
+            .locatedBy(".job-detail>.category>p:nth-child(2)");
 
 }
 ```
