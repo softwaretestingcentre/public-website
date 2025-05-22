@@ -1,5 +1,5 @@
 ---
-title: "Lesson 2 - Cucumber"
+title: "Lesson 2 - BDD Features"
 date: 2025-05-22
 ---
 # Using a shared language for requirements and tests
