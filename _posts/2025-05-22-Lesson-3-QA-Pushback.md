@@ -1,5 +1,5 @@
 ---
-title: "Lesson 3 - Example Mapping"
+title: "Lesson 3 - QA Pushback"
 date: 2025-05-22
 ---
 In the [previous BDD lesson](/public-website/2025/05/22/Lesson-2-Cucumber.html) we started to create a BDD framework that allows us to express Requirements in a testable way.
@@ -18,7 +18,7 @@ By writing the framework in distinct layers - Business, Logic and Interaction, w
       | Full Stack        |
       | Digital Marketing |
 ```
-# What should we not test next?
+# What should we NOT test next?
 It would be tempting at this point to write a test that checks that the Filter values themselves are correct and complete. This would involve either accessing the original job data directly or scraping the page to obtain it, then checking that all the categories in the job cards are represented in the filter. 
 
 I would argue that we should not do this as a system test:
@@ -28,7 +28,7 @@ I would argue that we should not do this as a system test:
 - It is dependent on a particular UX design that may change
 
 # What should we test?
-There is another filtering test that we can write - showing tests by the Experience level.
+There is another filtering test that we can write - showing jobs by the Experience level.
 
 When we do this, we should aim to reuse as much of the framework as we can, rather than writing new test code.
 
@@ -74,7 +74,7 @@ The **Then** clause is more complicated because:
 ![image](https://github.com/user-attachments/assets/b1e330ae-b670-402f-b92f-ca6249623f29)
 
 
-## Don't try to be too clever 
+# Don't try to be too clever 
 Rather than try to do anything complicated to get the experience data, I discussed this with the developer (me) and we agreed that it would be reasonable for jobseekers to see the required experience level in the job cards, so I updated the UI and pushed a new version of the application:
 
 ![image](https://github.com/user-attachments/assets/0143c4ff-10e9-4a67-8fda-f7a9c1523313)
@@ -110,6 +110,19 @@ Because we are dealing with comparing this value to a range expressed as a strin
     public static Target JOB_EXPERIENCE_LIST = Target.the("job experience list")
             .locatedBy(".job-detail>.experience>p>div");
 ```
+
+# Don't just accept that the UI is correct
+While doing exploratory testing of the UI, it becomes apparent that a jobseeker can select multiple experience levels.
+
+This does not make sense - why would a jobseeker look specifically for jobs with with both 2 years _and_ 5 years required experience?
+
+The expected behaviour _should be_ when a jobseeker filters by **maximum** experience level, all jobs with required experience _up to and including that value_ are shown.
+
+The application UI needs to be updated to reflect this definition of the feature.
+
+> ❗ Don't just accept that the UI is correct and needs to be tested as-is
+>
+> ❗ Yes - I just wasted my time writing an automated test before questioning the design
 
 
 
