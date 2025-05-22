@@ -34,17 +34,6 @@ Run Deploy and the application will be hosted at `stc-job-portal.netlify.app`:
 ![image](https://github.com/user-attachments/assets/22a339ba-403c-4559-ac90-c58f7daffda0)
 
 # Creating a Github Action
-
-Now that our web application is hosted externally, we can update the test's `NavigateActions` class to point to that URL:
-```java
-public class NavigateActions extends UIInteractions {
-    public String home = "https://stc-job-portal.netlify.app/";
-    @Step("Navigate to the home page")
-    public void toJobPortalHomePage() {
-        openUrl(home);
-    }
-}
-```
 We need to run tests in headless mode, so we update `serenity.conf`:
 ```
 serenity.test.root = com.softwaretestingcentre.testjobportal.features
