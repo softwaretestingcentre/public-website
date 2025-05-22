@@ -3,7 +3,7 @@ title: "Lesson 1 - Screenplay Pattern"
 date: 2025-05-20
 ---
 # Why UI-centric system tests are bad
-In the previous [Lesson Setup](2025-05-19-lesson-setup.md) article, we had the framework wired up and running a test but we also noted that:
+In the previous [Lesson Setup](/public-website/2025/05/19/lesson-setup.html) article, we had the framework wired up and running a test but we also noted that:
 >❗this is not testing user behaviour
 >
 >❗system tests should not check the website's structure
