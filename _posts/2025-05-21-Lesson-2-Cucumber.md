@@ -1,6 +1,6 @@
 ---
 title: "Lesson 2 - Cucumber"
-date: 2025-05-21
+date: 2025-05-22
 ---
 # Using a shared language for requirements and tests
 In the previous [Lesson 1 Screenplay Pattern](/public-website/2025/05/20/lesson-1-screenplay-pattern.html) article, we used the Screenplay Pattern to write a test with the concepts of:
