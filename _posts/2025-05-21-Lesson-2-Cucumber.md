@@ -209,7 +209,7 @@ public class FilterJobs {
     public static Performable checkAllJobsMatchCategory(String category) {
         return Ensure.that(Text.ofEach(JobListPage.JOB_CATEGORY_LIST))
                 .allMatch("category",
-                        job -> job.contains(category));
+                        jobCategory -> jobCategory.equals(category));
     }
 
 }
