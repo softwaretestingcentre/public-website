@@ -10,7 +10,7 @@ In the previous [Lesson Setup](/public-website/2025/05/19/lesson-setup.html) art
 
 System tests that just navigate through the application to check that certain elements or strings appear on certain pages are both low value and high cost:
 - They are heavily dependent on the structure of the application and on each page not changing, which is very unlikely
-- Modern UI frameworks abstract the application design away from the detail of the underlying HTML, so developers are probably unaware that their will break tests
+- Modern UI frameworks abstract the application design away from the detail of the underlying HTML, so developers are probably unaware that their changes will break tests
 - These checks should be part of front-end unit and component testing, not part of the system tests
 
 ***I have seen QA teams barely able to maintain their existing automated regression tests in the face of continual UI refactoring, let alone create tests for new functionality.***
