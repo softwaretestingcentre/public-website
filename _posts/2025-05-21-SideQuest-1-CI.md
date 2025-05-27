@@ -15,7 +15,7 @@ To this end, we can use Github Actions to:
 
 We want our web application hosted so that it can be navigated to by the Github CI runner at a consistent url.
 
-[Netlify](https://www.netlify.com/) allows us to host a web application build from code in a Githib repo.
+[Netlify](https://www.netlify.com/) allows us to host a web application build from code in a Github repo.
 
 Any commits to the application code will trigger a rebuild and redeploy on Netlify.
 
