@@ -116,7 +116,7 @@ While doing exploratory testing of the UI, it becomes apparent that a jobseeker 
 
 This does not make sense - why would a jobseeker look specifically for jobs with with both 2 years _and_ 5 years required experience?
 
-The expected behaviour _should be_ when a jobseeker filters by **maximum** experience level, all jobs with required experience _up to and including that value_ are shown.
+The expected behaviour _should be_ when a jobseeker filters by experience level, all jobs with required experience _up to and including that value_ are shown.
 
 The application UI needs to be updated to reflect this definition of the feature.
 
