@@ -215,6 +215,12 @@ public class FilterJobs {
 }
 ```
 > ℹ️ This provides a **Task** to do the filtering and an **Ensure** clause to check that the filtering has worked.
+>
+> ℹ️ Note how nicely these methods read. We don't need to specify selectors in raw Selenium commands or collect results and iterate over a list ourselves, Serenity does it all for us.
+>
+> ℹ️ This what makes Serenity a **framework** - it makes it easier to create, understand and report on tests.
+> 
+> ❗You often see Selenium or Playwright referred to as "frameworks", they are not - at best they are "tools" or "drivers".
 
 ## Full Step Definitions
 Now we can use these helper classes to complete the Step Definitions for this Scenario:
