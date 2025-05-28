@@ -124,7 +124,7 @@ Finally we want to use Serenity's alert handler to help us check that the job ap
 ```java
     public static Performable checkJobApplicationIsAcknowledged(Actor actor) {
         String acknowledgement = actor.asksFor(HtmlAlert.text());
-        Switch.toAlert().andAccept();
+        actor.attemptsTo(Switch.toAlert().andAccept());
         return Ensure.that(acknowledgement).isEqualTo("Your Job Application has been Applied Successfully");
     }
 
