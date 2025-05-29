@@ -58,4 +58,4 @@ Scenario: Betty sees the landing page #
 [INFO] Tests run: 1, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 4.386 s
 ```
 
-And we push to the repo at (test_sample_shop-app)[https://github.com/softwaretestingcentre/test_sample_shop-app]
+And we push to the repo at [test_sample_shop-app](https://github.com/softwaretestingcentre/test_sample_shop-app)
