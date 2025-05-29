@@ -1,6 +1,6 @@
 ---
 title: "Lesson 8 - Setting Up Shop"
-date: 2025-05-27
+date: 2025-05-29
 ---
 
 # The online shop application
