@@ -89,6 +89,19 @@ This test works but it is unsatisfactory for 2 reasons:
 - Just checking that we get a success message isn't a very good test that a user has been created
 - We won't be able to run the test again without either clearing the `customer` row from the DB or using different credentials
 
-# Direct database access
-Since we want to check that we actually created a `customer` row in the DB, and we want to be able to delete arbitrary rows, we need to access the DB directly from the tests.
+# Database access via API
+Since we want to check that we actually created a `customer` row in the DB, and we want to be able to delete arbitrary rows, we need to access the DB from the tests.
+
+This app supplies an API for managing data - [Documentation](https://github.com/softwaretestingcentre/atsea-sample-shop-app/blob/master/REST.md).
+
+So if we want to create a new customer, we have to go through some steps:
+- Find out if there is a customer record with that email
+- If there is, delete it
+
+This will be a combination of `GET /atsea/api/customer/username={username}` and `DELETE /atsea/api/customer/{customerId}`
+> ❗ I'm just starting to realise what a mess the schema is in. I will stick with it for now, for demonstration purposes.
+
+We can also use the `username` endpoint to check that a user has been created.
+
+
 
