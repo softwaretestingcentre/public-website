@@ -2,7 +2,7 @@
 title: "Lesson 10 - Basket Cases"
 date: 2025-05-30
 ---
-For this lesson we are going to try to add a Feature where a customer adda an item to their basket:
+For this lesson we are going to try to add a Feature where a customer adds an item to their basket:
 ```gherkin
 Feature: Customers can buy artwork
 
