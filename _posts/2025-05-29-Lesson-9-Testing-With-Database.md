@@ -2,7 +2,7 @@
 title: "Lesson 9 - Testing with a Database"
 date: 2025-05-29
 ---
-# Creating data
+# Creating data during a test
 
 One of the first actual tests we want to write is to create a new user account:
 ```gherkin
@@ -163,6 +163,12 @@ public class UserManagement {
 So now we:
 - delete the user record with a matching username (if it exists)
 - check both that the success message is displayed AND that we have a record for the new customer in the database
+
+> ✔️ Note that all the changes were made in the helper class.
+> 
+> ✔️ The Scenario and Step Definitions remained the same as before.
+>
+> ✔️ This is the great advantage of layering your test framework correctly.
 
 
 
