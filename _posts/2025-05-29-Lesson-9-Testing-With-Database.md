@@ -87,7 +87,7 @@ public class CreateUser {
 
 This test works but it is unsatisfactory for 2 reasons:
 - Just checking that we get a success message isn't a very good test that a user has been created
-- We won't be able to run the test again without either clearing the `customer` row from the DB or using different credentials
+- We won't be able to run the test again without either clearing the `customer` row from the DB or using different customer input data
 
 # Database access via API
 Since we want to check that we actually created a `customer` row in the DB, and we want to be able to delete arbitrary rows, we need to access the DB from the tests.
@@ -98,10 +98,81 @@ So if we want to create a new customer, we have to go through some steps:
 - Find out if there is a customer record with that email
 - If there is, delete it
 
-This will be a combination of `GET /atsea/api/customer/username={username}` and `DELETE /atsea/api/customer/{customerId}`
+This will be a combination of `GET /api/customer/username={username}` and `DELETE /api/customer/{customerId}`
 > ❗ I'm just starting to realise what a mess the schema is in. I will stick with it for now, for demonstration purposes.
 
 We can also use the `username` endpoint to check that a user has been created.
 
+So, replacing the `CreateUser` helper class with a more general `UserManagement` class, we can use RestAssured methods to work with the REST API:
+```java
+public class UserManagement {
+
+    public static Performable createUser(String username, String password) {
+        deleteUserByName(username);
+        return Task.where("Create a user with " + username + " and " + password,
+                SendKeys.of("q").into(CreateUserPage.EMAIL),
+                DoubleClick.on(CreateUserPage.EMAIL),
+                Enter.keyValues(username).into(CreateUserPage.EMAIL),
+
+                Click.on(CreateUserPage.PASSWORD),
+                SendKeys.of("q").into(CreateUserPage.PASSWORD),
+                DoubleClick.on(CreateUserPage.PASSWORD),
+                Enter.keyValues(password).into(CreateUserPage.PASSWORD),
+
+                Click.on(CreateUserPage.SIGN_UP));
+    }
+
+    public static Performable checkUserWasCreated(String username) {
+        return Ensure.that(Text.of(CreateUserPage.SUCCESS_MESSAGE))
+                .matches("User created",
+                        message ->
+                                message.equals("Congratulations! Your account has been created!")
+                                && getUserIdFromUsername(username) > 0);
+    }
+
+    public static int getUserIdFromUsername(String username) {
+        int userId = 0;
+        try {
+            userId = when().get("http://localhost:8080/api/customer/username=" + username)
+                    .then().contentType(ContentType.JSON)
+                    .extract().path("customerIf"); //sic
+        } catch (Exception ignored) {
+        }
+        return userId;
+    }
+
+    public static void deleteUserWithId(int userId) {
+        when().delete("http://localhost:8080/api/customer/" + userId)
+                .then().statusCode(204);
+    }
+
+    public static void deleteUserByName(String username) {
+        int userId = getUserIdFromUsername(username);
+        if (userId == 0) return;
+        deleteUserWithId(userId);
+    }
+
+}
+```
+> ❗ Note that `customerId` is mis-spelled `customerIf` in the JSON response `getUserIdFromUsername()`
+
+So now we:
+- delete the user record with a matching username (if it exists)
+- check both that the success message is displayed AND that we have a record for the new customer in the database
+
+Since we are doing a check on the username now, it needs to be passed in through the step definition:
+```gherkin
+  Scenario: Nick creates a user account
+    Given Nick creates a user account
+    When Nick enters "nick" and "Pa$$w0rd" login details
+    Then A new account is created for Nick with username "nick"
+```
+
+```java
+    @Then("A new account is created for {actor} with username {string}")
+    public void aNewAccountIsCreated(Actor actor, String username) {
+        actor.attemptsTo(UserManagement.checkUserWasCreated(username));
+    }
+```
 
 
