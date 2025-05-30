@@ -109,6 +109,7 @@ public class UserManagement {
 
     public static Performable createUser(String username, String password) {
         deleteUserByName(username);
+        theActorInTheSpotlight().remember("username", username);
         return Task.where("Create a user with " + username + " and " + password,
                 SendKeys.of("q").into(CreateUserPage.EMAIL),
                 DoubleClick.on(CreateUserPage.EMAIL),
@@ -122,7 +123,8 @@ public class UserManagement {
                 Click.on(CreateUserPage.SIGN_UP));
     }
 
-    public static Performable checkUserWasCreated(String username) {
+    public static Performable checkUserWasCreated() {
+        String username = theActorInTheSpotlight().recall("username");
         return Ensure.that(Text.of(CreateUserPage.SUCCESS_MESSAGE))
                 .matches("User created",
                         message ->
@@ -156,23 +158,12 @@ public class UserManagement {
 ```
 > ❗ Note that `customerId` is mis-spelled `customerIf` in the JSON response `getUserIdFromUsername()`
 
+> ℹ️ Because we are doing a check on the username now, we have added commands to have it remembered and recalled by the current Actor.
+
 So now we:
 - delete the user record with a matching username (if it exists)
 - check both that the success message is displayed AND that we have a record for the new customer in the database
 
-Since we are doing a check on the username now, it needs to be passed in through the step definition:
-```gherkin
-  Scenario: Nick creates a user account
-    Given Nick creates a user account
-    When Nick enters "nick" and "Pa$$w0rd" login details
-    Then A new account is created for Nick with username "nick"
-```
 
-```java
-    @Then("A new account is created for {actor} with username {string}")
-    public void aNewAccountIsCreated(Actor actor, String username) {
-        actor.attemptsTo(UserManagement.checkUserWasCreated(username));
-    }
-```
 
 
