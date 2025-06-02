@@ -78,7 +78,7 @@ So now we have only 3 step definitions to cover tests for single and multiple it
 >
 > ℹ️ If we only have complicated tests failing, it is easy to blame the test failures on their complexity, hiding the fact that the basic functionality may be broken - so always get evidence for that first
 >
-> ❗ Note the I have changed the item for the second test - we need to vary our test data to prove that the application can cope with more than example of the input data
+> ❗ Note that I have changed the item for the second test - we need to vary our test data to prove that the application can cope with more than example of the input data
 
 # Mixing it up
 Another check that baskets are created and totalled correctly is to add a mixture of different items.
