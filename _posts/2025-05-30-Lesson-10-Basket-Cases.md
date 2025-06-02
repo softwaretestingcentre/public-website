@@ -7,7 +7,7 @@ For this lesson we are going to try to add a Feature where a customer adds an it
 Feature: Customers can buy artwork
 
   Scenario: Betty chooses "Unusable Security"
-    Given Betty adds "Unusable Security" to her basket
+    Given Betty adds "Unusable Security" at $2 to her basket
     When she checks her basket
     Then she can see her basket contains only 1 item of "Unusable Security"
 ```
@@ -22,10 +22,10 @@ and confirming that the number of items and subtotal are correct:
 Our Step Definitions will mostly rely on a new `Shop` helper class:
 ```java
 public class ShopStepDefinitions {
-    @Given("{actor} adds {string} to her basket")
-    public void bettyAddsToHerBasket(Actor actor, String itemName) {
+    @Given("{actor} adds {string} at ${int} to her basket")
+    public void bettyAddsToHerBasket(Actor actor, String itemName, int itemPrice) {
         actor.wasAbleTo(Open.browserOn().the(LandingPage.class));
-        actor.attemptsTo(Shop.addItemToBasket(itemName));
+        actor.attemptsTo(Shop.addItemToBasket(itemName, itemPrice));
     }
 
     @When("{actor} checks her basket")
@@ -43,10 +43,10 @@ public class ShopStepDefinitions {
 ```java
 public class Shop {
 
-    public static Performable addItemToBasket(String itemName) {
+    public static Performable addItemToBasket(String itemName, itemPrice) {
         return Task.where("adds " + itemName + " to basket",
                 actor -> {
-                    actor.remember("item cost", Text.of(ShopPage.ITEM_COST.of(itemName)));
+                    actor.remember("item price", itemPrice);
                     actor.attemptsTo(Click.on(ShopPage.ADD_ITEM.of(itemName)));
                 }
         );
@@ -65,7 +65,7 @@ public class Shop {
     public static Question<Boolean> basketIsCorrect(int itemCount, String itemName) {
         return Question.about("basket contents").answeredBy(
                 actor -> {
-                    String itemPrice = actor.recall("item cost").toString().replaceAll("^.", "");
+                    int itemPrice = actor.recall("item price");
                     String basketContent = actor.recall("basket contents");
                     String subTotal = actor.recall("basket subtotal");
                     return basketContent.equals(itemName + "\nQuantity " + itemCount + "remove\n" + itemPrice)
@@ -94,9 +94,6 @@ public class ShopPage extends PageObject {
 
     public static Target ADD_ITEM = Target.the("Add Item to Basket")
             .locatedBy("//*[.='{0}']//..//button");
-
-    public static Target ITEM_COST = Target.the("item cost")
-            .locatedBy("//*[.='{0}']//..//*[@class='tilePrice']");
 
     public static Target CHECKOUT = Target.the("Checkout button")
             .locatedBy("//*[text()='Checkout']");
