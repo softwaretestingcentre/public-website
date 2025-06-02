@@ -1,6 +1,6 @@
 ---
 title: "Lesson 11 - Multiple Basket Cases"
-date: 2025-06-03
+date: 2025-06-02
 ---
 In the [previous lesson](/public-website/2025/05/30/Lesson-10-Basket-Cases.html) we saw how to add single items to the basket.
 
