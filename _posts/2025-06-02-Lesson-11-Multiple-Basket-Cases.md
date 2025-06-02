@@ -55,7 +55,7 @@ And we are going to change the way we predict and check the subtotal for the `Th
 # Refactoring
 We notice now that there is very little difference (just the addition of a loop) between `addItemToBasket()` and `addItemsToBasket()` helper methods.
 
-Adding one item is just a special cases of adding multiple items, so we can remove both the redundant helper method `addItemToBasket()` and stepDefinition and update our original Scenario to:
+Adding one item is just a special case of adding multiple items, so we can remove both the redundant helper method `addItemToBasket()` and stepDefinition and update our original Scenario to:
 ```gherkin
   Scenario: Betty chooses "Unusable Security"
     Given Betty adds 1 item of "Unusable Security" at $2 each to her basket
