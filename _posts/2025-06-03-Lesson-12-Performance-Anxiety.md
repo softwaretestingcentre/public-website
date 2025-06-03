@@ -1,5 +1,5 @@
 ---
-title: "Lesson 12 - Performance Anxiety"
+title: "Lesson 13 - Performance Anxiety"
 date: 2025-11-04
 ---
 In the previous lessons we have seen how to work with a BDD framework to perform automated testing of functional requirements.
