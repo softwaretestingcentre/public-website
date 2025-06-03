@@ -1,6 +1,6 @@
 ---
 title: "Lesson 12 - Performance Anxiety"
-date: 2025-06-04
+date: 2025-11-04
 ---
 In the previous lessons we have seen how to work with a BDD framework to perform automated testing of functional requirements.
 
@@ -169,13 +169,50 @@ There's **no reason** for this request to be slow unless we do something catastr
 # Getting more involved
 Now we are going to see what happens if we try to deliberately break the system.
 
-Changing the test to get all the product data from the database via the API:
+Using RestAssured to create some test Customer data:
+```java
+    public class Customer {
+        private int customerId;
+        private String name;
+        private String address;
+        private String email;
+        private String phone;
+        private String username;
+        private String password;
+        private String enabled;
+        private String role;
+
+        public Customer(int customerId, String name) {
+            this.customerId = customerId;
+            this.name = name;
+            this.address = "144 Townsend Street";
+            this.email = "foo@bar.com";
+            this.phone = "12345678";
+            this.username = name;
+            this.password = "password";
+            this.enabled = "true";
+            this.role = "USER";
+        }
+    }
+
+    @Test
+    public void createCustomerData() {
+        for (int i = 3; i < 1000; i++) {
+            Customer testCustomer = new Customer(i, "Foobar-" + i);
+            given().contentType(ContentType.JSON).body(testCustomer)
+                    .when().post("http://localhost:8080/api/customer/")
+                    .then().statusCode(HttpStatus.SC_CREATED);
+        }
+    }
+```
+
+We now have 1000 Customer records, which we can use for our test:
 ```javascript
 export default function() {
-    http.get("http://localhost:8080/api/product/");
+    http.get("http://localhost:8080/api/customer/");
 }
 ```
-And run with 200VUs `k6 run --vus 200 --duration 30s load-test-atsea-shop.js`:
+And with 200 VUs, we see:
 ```
          /\      Grafana   /‾‾/  
     /\  /  \     |\  __   /  /   
@@ -195,28 +232,96 @@ And run with 200VUs `k6 run --vus 200 --duration 30s load-test-atsea-shop.js`:
   █ TOTAL RESULTS 
 
     HTTP
-    http_req_duration.......................................................: avg=8.09ms min=580.45µs med=2.02ms max=1.09s p(90)=8.5ms p(95)=16.97ms
-      { expected_response:true }............................................: avg=8.09ms min=580.45µs med=2.02ms max=1.09s p(90)=8.5ms p(95)=16.97ms
-    http_req_failed.........................................................: 0.00%  0 out of 5992
-    http_reqs...............................................................: 5992   197.447408/s
+    http_req_duration.......................................................: avg=71.66ms min=688.17µs med=3.18ms max=1.53s p(90)=119.92ms p(95)=618.45ms
+      { expected_response:true }............................................: avg=71.66ms min=688.17µs med=3.18ms max=1.53s p(90)=119.92ms p(95)=618.45ms
+    http_req_failed.........................................................: 0.00%  0 out of 83729
+    http_reqs...............................................................: 83729  2783.941817/s
 
     EXECUTION
-    iteration_duration......................................................: avg=1s     min=1s       med=1s     max=2.1s  p(90)=1s    p(95)=1.01s  
-    iterations..............................................................: 5992   197.447408/s
-    vus.....................................................................: 200    min=200       max=200
-    vus_max.................................................................: 200    min=200       max=200
+    iteration_duration......................................................: avg=71.77ms min=752.23µs med=3.29ms max=1.53s p(90)=120.04ms p(95)=618.6ms 
+    iterations..............................................................: 83729  2783.941817/s
+    vus.....................................................................: 200    min=200        max=200
+    vus_max.................................................................: 200    min=200        max=200
 
     NETWORK
-    data_received...........................................................: 4.9 MB 160 kB/s
-    data_sent...............................................................: 479 kB 16 kB/s
+    data_received...........................................................: 20 MB  658 kB/s
+    data_sent...............................................................: 6.9 MB 231 kB/s
 
 
 
 
-running (0m30.3s), 000/200 VUs, 5992 complete and 0 interrupted iterations
+running (0m30.1s), 000/200 VUs, 83729 complete and 0 interrupted iterations
 default ✓ [======================================] 200 VUs  30s
 ```
-So far, so dull. Let's try to break the system.
+Now we are getting the slowest responses into the seconds rather than milliseconds duration.
+
+And some significant CPU activity:
+
+![image](https://github.com/user-attachments/assets/1ebe5d4c-6af4-4cc4-989c-33794b82ac88)
+
+Let's try breaking the system's responsiveness by limiting database connections. In `postgresql.conf`:
+```
+max_connections = 1
+```
+
+```
+
+         /\      Grafana   /‾‾/  
+    /\  /  \     |\  __   /  /   
+   /  \/    \    | |/ /  /   ‾‾\ 
+  /          \   |   (  |  (‾)  |
+ / __________ \  |_|\_\  \_____/ 
+
+     execution: local
+        script: load-test-atsea-shop.js
+        output: -
+
+     scenarios: (100.00%) 1 scenario, 200 max VUs, 1m0s max duration (incl. graceful stop):
+              * default: 200 looping VUs for 30s (gracefulStop: 30s)
+
+
+
+  █ TOTAL RESULTS 
+
+    HTTP
+    http_req_duration.......................................................: avg=273.98ms min=8.78ms med=161.69ms max=3.57s p(90)=684.47ms p(95)=924.58ms
+      { expected_response:true }............................................: avg=273.98ms min=8.78ms med=161.69ms max=3.57s p(90)=684.47ms p(95)=924.58ms
+    http_req_failed.........................................................: 0.00%  0 out of 21966
+    http_reqs...............................................................: 21966  726.486755/s
+
+    EXECUTION
+    iteration_duration......................................................: avg=274.15ms min=8.93ms med=161.83ms max=3.57s p(90)=684.61ms p(95)=924.73ms
+    iterations..............................................................: 21966  726.486755/s
+    vus.....................................................................: 200    min=200        max=200
+    vus_max.................................................................: 200    min=200        max=200
+
+    NETWORK
+    data_received...........................................................: 3.0 GB 99 MB/s
+    data_sent...............................................................: 1.8 MB 60 kB/s
+
+
+
+
+running (0m30.2s), 000/200 VUs, 21966 complete and 0 interrupted iterations
+default ✓ [======================================] 200 VUs  30s
+```
+
+We only get a quarter of the requests handled, with a corresponding increase in the average response times.
+
+CPU is almost maxxed out:
+
+![image](https://github.com/user-attachments/assets/81d89c01-ddd7-411e-a9ff-b8d26d484a26)
+
+There's some chunky network traffic:
+
+![image](https://github.com/user-attachments/assets/c8a40796-ae78-458d-9d14-65fe43b8f908)
+
+Even some memory pressure:
+
+![image](https://github.com/user-attachments/assets/252aad68-6a11-4d98-aa19-ff7fa9d3723d)
+
+
+
 
 
 
