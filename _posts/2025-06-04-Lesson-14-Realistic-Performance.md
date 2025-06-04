@@ -208,7 +208,7 @@ export async function browseLandingPage () {
     await page.goto('http://localhost:8080/');
 
     await check(page.locator('//div[.="Docker for Developers"]//..//img'), {
-      header: async (tileTitle) => (await tileTitle.isVisible()),
+      header: async (tileImage) => (await tileImage.isVisible()),
     });
   } finally {
     await page.close();
@@ -281,7 +281,7 @@ ERRO[0004] thresholds on metrics 'browser_web_vital_fcp' were crossed; at least 
 # Summary
 We have different ways of simulating realistic user journeys with background load.
 
-These performance tests allow us to evaluate the current state of the application and the impact both of load in terms of requests to the application and the implication of increasing the data in the application - or from a business perspective increasing the number of products available.
+These performance tests allow us to evaluate the current state of the application and the impact both of load in terms of requests to the application and the implication of increasing the data in the application - or from a business perspective _increasing the number of products available_.
 
 > ✔️ Using this data we can make informed decisions about how to design the application to provide the best performance for the maximum number of users.
 
