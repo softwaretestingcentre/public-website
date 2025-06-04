@@ -83,7 +83,7 @@ Noting that we are already seeing some significant CPU usage as the application 
 
 
 running (10.0s), 000/200 VUs, 26705 complete and 0 interrupted iterations
-default ✓ [======================================] 200 VUs  10s
+default ✓ [======================================] 200 VUs  10sh2
 ```
 We can see that k6 has produced some stats for us showing the responsiveness of the system and how many requests it was able to serve in 10s.
 
@@ -269,7 +269,7 @@ All of these are valid responses depending on the needs of the business
 > ℹ️ just because a test fails doesn't mean anyone is obliged to "fix" it - the signal it provides may call for alternative action
 
 
-> ❗ The last response is especially valid - we shouldn't provide endpoints just because we can - endpoints with heavy responses can be used as attack vectors
+> ❗ The last response is especially valid - we shouldn't provide endpoints just because we can - an unauthenticated list of customer details is a **massive** security breach 😱
 
 
 > ✔️ The second is actually good feedback about the test itself - in the next lesson we will learn how to identify realistic performance tests 
