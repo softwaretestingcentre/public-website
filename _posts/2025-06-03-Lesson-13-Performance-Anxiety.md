@@ -257,3 +257,19 @@ ERRO[0034] thresholds on metrics 'http_req_duration' were crossed; at least one 
 And now we struggle to serve 19 concurrent users 😢 so there is work to do.
 
 > ✔️ We now have an easily repeatable test that gives us useful feedback, so we can use it to assess different approaches to increasing the system performance.
+
+There are may ways that we can react to this performance test failure:
+> ☹️ just increase the threshold until the test passes more reliably
+> 
+> 😐 disregard the result because `/customer/` is not a critical customer-facing endpoint
+>
+> 🥲 realise there is no use case for this endpoint and just delete it
+
+All of these are valid responses depending on the needs of the business
+> ℹ️ just because a test fails doesn't mean anyone is obliged to "fix" it - the signal it provides may call for alternative action
+
+
+> ❗ The last response is especially valid - we shouldn't provide endpoints just because we can - endpoints with heavy responses can be used as attack vectors
+
+
+> ✔️ The second is actually good feedback about the test itself - in the next lesson we will learn how to identify realistic performance tests 
