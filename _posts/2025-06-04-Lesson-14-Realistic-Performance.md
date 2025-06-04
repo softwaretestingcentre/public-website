@@ -285,3 +285,13 @@ These performance tests allow us to evaluate the current state of the applicatio
 
 > ✔️ Using this data we can make informed decisions about how to design the application to provide the best performance for the maximum number of users.
 
+One quick win would be to resize all the images from 400x400 to 200x200 - because that is the size we are displaying them in the page.
+
+When we do this, we can cope with more than 3 times as many users:
+```
+running (0m14.1s), 000/100 VUs, 31308 complete and 51 interrupted iterations
+browser ✗ [================>---------------------] 10 VUs     14.0s/30s
+load    ✗ [================>---------------------] 41/90 VUs  14.0s/30.0s
+ERRO[0014] thresholds on metrics 'browser_web_vital_fcp' were crossed; at least one has abortOnFail enabled
+, stopping test prematurely
+```
