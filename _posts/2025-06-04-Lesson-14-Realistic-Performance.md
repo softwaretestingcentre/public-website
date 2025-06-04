@@ -45,7 +45,7 @@ export default async function () {
     await page.goto('http://localhost:8080/');
 
     await check(page.locator('//div[.="Docker for Developers"]//..//img'), {
-      header: async (tileTitle) => (await tileTitle.isVisible()),
+      header: async (tileImage) => (await tileImage.isVisible()),
     });
   } finally {
     await page.close();
@@ -89,26 +89,26 @@ When we run the test, we get a lot of output:
     ✓ header
 
     EXECUTION
-    iteration_duration...................................: avg=708.07ms min=708.07ms med=708.07ms max=708.07ms p(90)=708.07ms p(95)=708.07ms
-    iterations...........................................: 1      0.982804/s
-    vus..................................................: 1      min=1       max=1
-    vus_max..............................................: 1      min=1       max=1
+    iteration_duration: avg=708.07ms min=708.07ms med=708.07ms max=708.07ms p(90)=708.07ms p(95)=708.07ms
+    iterations........: 1      0.982804/s
+    vus...............: 1      min=1       max=1
+    vus_max...........: 1      min=1       max=1
 
     NETWORK
-    data_received........................................: 0 B    0 B/s
-    data_sent............................................: 0 B    0 B/s
+    data_received.....: 0 B    0 B/s
+    data_sent.........: 0 B    0 B/s
 
     BROWSER
-    browser_data_received................................: 2.3 MB 2.3 MB/s
-    browser_data_sent....................................: 4.4 kB 4.4 kB/s
-    browser_http_req_duration............................: avg=29.73ms  min=3.44ms   med=20.36ms  max=99.45ms  p(90)=64.92ms  p(95)=77.75ms 
-    browser_http_req_failed..............................: 5.88%  1 out of 17
+    browser_data_received.....: 2.3 MB 2.3 MB/s
+    browser_data_sent.........: 4.4 kB 4.4 kB/s
+    browser_http_req_duration.: avg=29.73ms  min=3.44ms   med=20.36ms  max=99.45ms  p(90)=64.92ms  p(95)=77.75ms 
+    browser_http_req_failed...: 5.88%  1 out of 17
 
     WEB_VITALS
-    browser_web_vital_cls................................: avg=0.288931 min=0.288931 med=0.288931 max=0.288931 p(90)=0.288931 p(95)=0.288931
-    browser_web_vital_fcp................................: avg=352ms    min=352ms    med=352ms    max=352ms    p(90)=352ms    p(95)=352ms   
-    browser_web_vital_lcp................................: avg=436ms    min=436ms    med=436ms    max=436ms    p(90)=436ms    p(95)=436ms   
-    browser_web_vital_ttfb...............................: avg=6.89ms   min=6.89ms   med=6.89ms   max=6.89ms   p(90)=6.89ms   p(95)=6.89ms  
+    browser_web_vital_cls.: avg=0.288931 min=0.288931 med=0.288931 max=0.288931 p(90)=0.288931 p(95)=0.288931
+    browser_web_vital_fcp.: avg=352ms    min=352ms    med=352ms    max=352ms    p(90)=352ms    p(95)=352ms   
+    browser_web_vital_lcp.: avg=436ms    min=436ms    med=436ms    max=436ms    p(90)=436ms    p(95)=436ms   
+    browser_web_vital_ttfb: avg=6.89ms   min=6.89ms   med=6.89ms   max=6.89ms   p(90)=6.89ms   p(95)=6.89ms  
 
 
 
@@ -150,14 +150,138 @@ export const options = {
   },
 };
 ```
-And this already makes a difference to the test results:
+And this already makes a difference to the test results, with the average time more than doubling:
 ```
     EXECUTION
-    iteration_duration...................................: avg=1.59s    min=997.29ms med=1.62s    max=1.91s    p(90)=1.77s    p(95)=1.8s  
+    iteration_duration: avg=1.59s    min=997.29ms med=1.62s    max=1.91s    p(90)=1.77s    p(95)=1.8s  
 
     WEB_VITALS
-    browser_web_vital_cls................................: avg=0.311018 min=0.288931 med=0.288931 max=0.370292 p(90)=0.370292 p(95)=0.370292
-    browser_web_vital_fcp................................: avg=732.5ms  min=380ms    med=740ms    max=1s       p(90)=874.4ms  p(95)=885.2ms 
-    browser_web_vital_lcp................................: avg=964.06ms min=532ms    med=988ms    max=1.22s    p(90)=1.11s    p(95)=1.15s   
-    browser_web_vital_ttfb...............................: avg=19.94ms  min=8.4ms    med=16.69ms  max=59.79ms  p(90)=33.55ms  p(95)=41.09ms
+    browser_web_vital_cls.: avg=0.311018 min=0.288931 med=0.288931 max=0.370292 p(90)=0.370292 p(95)=0.370292
+    browser_web_vital_fcp.: avg=732.5ms  min=380ms    med=740ms    max=1s       p(90)=874.4ms  p(95)=885.2ms 
+    browser_web_vital_lcp.: avg=964.06ms min=532ms    med=988ms    max=1.22s    p(90)=1.11s    p(95)=1.15s   
+    browser_web_vital_ttfb: avg=19.94ms  min=8.4ms    med=16.69ms  max=59.79ms  p(90)=33.55ms  p(95)=41.09ms
 ```
+Bumping up to 100 VUs results in unacceptable performance:
+```
+    EXECUTION
+    iteration_duration: avg=16.91s   min=5.66s    med=16.46s   max=23.38s   p(90)=20.92s   p(95)=21.6s
+```
+Because we are running everything locally, it's unclear if the performance is made worse by the overhead of k6 needing to create the VUs and browser instances.
+
+# Hybrid testing
+A better way to test the system under load is to have a user browsing the landing page, while making multiple endpoint requests for data that the page needs, e.g. one of the larger images:
+```javascript
+import { browser } from 'k6/browser';
+import { check } from 'https://jslib.k6.io/k6-utils/1.5.0/index.js';
+import http from 'k6/http';
+
+export const options = {
+  scenarios: {
+    browser: {
+      exec: 'browseLandingPage',
+      executor: 'constant-vus',
+      vus: 10,
+      duration: '30s',
+      options: {
+        browser: {
+          type: 'chromium',
+        },
+      },
+    },
+    load: {
+        exec: 'getProductImage',
+        executor: 'constant-vus',
+        vus: 90,
+        duration: '30s',
+    }
+  },
+  thresholds: {
+    checks: ['rate==1.0'],
+  },
+};
+
+export async function browseLandingPage () {
+  const context = await browser.newContext();
+  const page = await context.newPage();
+
+  try {
+    await page.goto('http://localhost:8080/');
+
+    await check(page.locator('//div[.="Docker for Developers"]//..//img'), {
+      header: async (tileTitle) => (await tileTitle.isVisible()),
+    });
+  } finally {
+    await page.close();
+  }
+}
+
+export function getProductImage() {
+    const response = http.get("http://localhost:8080/images/9.png");
+    check(response, {"status was 200": (r) => r.status == 200});
+}
+```
+And we can see that this is affecting the rendering times (e.g. First Contentful Paint) compared to the single-user results we saw first time round:
+```
+browser_web_vital_fcp: avg=1.2s     min=480ms    med=1.26s    max=1.66s    p(90)=1.45s    p(95)=1.49s
+```
+As in the previous lesson, let's set a threshold for average fcp to 1s and ramp up the background load to see when it fails:
+```javascript
+export const options = {
+  scenarios: {
+    browser: {
+      exec: 'browseLandingPage',
+      executor: 'constant-vus',
+      vus: 10,
+      duration: '30s',
+      options: {
+        browser: {
+          type: 'chromium',
+        },
+      },
+    },
+    load: {
+        exec: 'getProductImage',
+        executor: 'ramping-vus',
+        stages: [
+            { duration: '10s', target: 30},
+            { duration: '10s', target: 60},
+            { duration: '10s', target: 90},
+        ],
+    }
+  },
+  thresholds: {
+    checks: ['rate==1.0'],
+    browser_web_vital_fcp: [{ threshold: 'avg < 1000', abortOnFail: true }],
+  },
+};
+```
+And we see we got to a background load of 39 users:
+```
+running (0m18.2s), 000/100 VUs, 32684 complete and 63 interrupted iterations
+browser ✗ [=====================>----------------] 10 VUs     18.0s/30s
+load    ✗ [=====================>----------------] 39/90 VUs  18.0s/30.0s
+ERRO[0018] thresholds on metrics 'browser_web_vital_fcp' were crossed; at least one has abortOnFail enabled
+, stopping test prematurely
+```
+
+# Increasing data load
+Another way to create load on the system is to have it supply more data for a typical user journey.
+
+e.g. what happens if we increase the number of products shown on the landing page from 9 to 25?
+
+As we might expect, it fails much faster:
+```
+running (0m04.0s), 000/100 VUs, 1694 complete and 22 interrupted iterations
+browser ✗ [====>---------------------------------] 10 VUs     04.0s/30s
+load    ✗ [====>---------------------------------] 12/90 VUs  04.0s/30.0s
+ERRO[0004] thresholds on metrics 'browser_web_vital_fcp' were crossed; at least one has abortOnFail enabled
+, stopping test prematurely
+```
+
+# Summary
+We have different ways of simulating realistic user journeys with background load.
+
+These performance tests allow us to evaluate the current state of the application and the impact both of load in terms of requests to the application and the implication of increasing the data in the application - or from a business perspective increasing the number of products available.
+
+> ✔️ Using this data we can make informed decisions about how to design the application to provide the best performance for the maximum number of users.
+
