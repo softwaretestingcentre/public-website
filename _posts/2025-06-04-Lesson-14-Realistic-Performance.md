@@ -129,6 +129,8 @@ If we re-run the test with the debug flag: `K6_BROWSER_DEBUG=true k6 run browser
 
 This just means we don't have the icon for the browser tab and we can ignore it for now (or fix it).
 
+> ❗ The "Broken Windows" theory would suggest that we fix this immediately even though it is trivial. When we get used to seeing tests fail, we tend to ignore them and miss any new information they might be providing.
+
 # Adding user load
 We can change the options to run the test with 10 simultaneous users for 30s:
 ```javascript
@@ -260,8 +262,8 @@ And we see we got to a background load of 39 users:
 running (0m18.2s), 000/100 VUs, 32684 complete and 63 interrupted iterations
 browser ✗ [=====================>----------------] 10 VUs     18.0s/30s
 load    ✗ [=====================>----------------] 39/90 VUs  18.0s/30.0s
-ERRO[0018] thresholds on metrics 'browser_web_vital_fcp' were crossed; at least one has abortOnFail enabled
-, stopping test prematurely
+ERRO[0018] thresholds on metrics 'browser_web_vital_fcp' were crossed;
+at least one has abortOnFail enabled, stopping test prematurely
 ```
 
 # Increasing data load
@@ -269,13 +271,19 @@ Another way to create load on the system is to have it supply more data for a ty
 
 e.g. what happens if we increase the number of products shown on the landing page from 9 to 25?
 
+```sql
+INSERT INTO product (name, description, image, price) VALUES ('DockerCon 10', 'Docker 10', '/images/10.png', 1024);
+...
+INSERT INTO product (name, description, image, price) VALUES ('DockerCon 25', 'Docker 25', '/images/25.png', 1024);
+```
+
 As we might expect, it fails much faster:
 ```
 running (0m04.0s), 000/100 VUs, 1694 complete and 22 interrupted iterations
 browser ✗ [====>---------------------------------] 10 VUs     04.0s/30s
 load    ✗ [====>---------------------------------] 12/90 VUs  04.0s/30.0s
-ERRO[0004] thresholds on metrics 'browser_web_vital_fcp' were crossed; at least one has abortOnFail enabled
-, stopping test prematurely
+ERRO[0004] thresholds on metrics 'browser_web_vital_fcp' were crossed;
+at least one has abortOnFail enabled, stopping test prematurely
 ```
 
 # Summary
@@ -287,11 +295,15 @@ These performance tests allow us to evaluate the current state of the applicatio
 
 One quick win would be to resize all the images from 400x400 to 200x200 - because that is the size we are displaying them in the page.
 
+```
+/atsea-sample-shop-app/app/react-app/public/images$ mogrify -resize 200x200 *.png
+```
+
 When we do this, we can cope with more than 3 times as many users:
 ```
 running (0m14.1s), 000/100 VUs, 31308 complete and 51 interrupted iterations
 browser ✗ [================>---------------------] 10 VUs     14.0s/30s
 load    ✗ [================>---------------------] 41/90 VUs  14.0s/30.0s
-ERRO[0014] thresholds on metrics 'browser_web_vital_fcp' were crossed; at least one has abortOnFail enabled
-, stopping test prematurely
+ERRO[0014] thresholds on metrics 'browser_web_vital_fcp' were crossed;
+at least one has abortOnFail enabled, stopping test prematurely
 ```
