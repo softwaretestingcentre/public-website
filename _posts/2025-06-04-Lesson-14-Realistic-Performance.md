@@ -170,6 +170,8 @@ Bumping up to 100 VUs results in unacceptable performance:
 ```
 Because we are running everything locally, it's unclear if the performance is made worse by the overhead of k6 needing to create the VUs and browser instances.
 
+> ℹ️ It is advisable for performance testing to have the test client and website running on different hardware to avoid problems and unreliable results caused by resource exhaustion.
+
 # Hybrid testing
 A better way to test the system under load is to have a user browsing the landing page, while making multiple endpoint requests for data that the page needs, e.g. one of the larger images:
 ```javascript
@@ -308,4 +310,22 @@ ERRO[0014] thresholds on metrics 'browser_web_vital_fcp' were crossed;
 at least one has abortOnFail enabled, stopping test prematurely
 ```
 
-> ℹ️ It is advisable for performance testing to have the test client and website running on different hardware to avoid problems and unreliable results caused by resource exhaustion.
+# Performance Testing - When and Why
+
+Performance tests don't have to be long* and complicated - they can fit in at any stage of the SDLC to give valuable feedback about any changes.
+
+<sub>* (except soak tests)</sub>
+
+| You just changed this | So you test like this |
+| ----------------- | ---------------- |
+| Backend service | Related endpoint(s) |
+| Database schema/procedure | Related endpoint(s) |
+| Frontend component | Browser |
+| Frontend bundling | Browser |
+| Hosting config | Hybrid |
+| Size/Quantity of business data | Hybrid |
+| Market segment | Hybrid |
+
+etc.
+
+> ❗ ALWAYS start performance testing by agreeing on expectations and targets
