@@ -307,3 +307,5 @@ load    ✗ [================>---------------------] 41/90 VUs  14.0s/30.0s
 ERRO[0014] thresholds on metrics 'browser_web_vital_fcp' were crossed;
 at least one has abortOnFail enabled, stopping test prematurely
 ```
+
+> ℹ️ It is advisable for performance testing to have the test client and website running on different hardware to avoid problems and unreliable results caused by resource exhaustion.
