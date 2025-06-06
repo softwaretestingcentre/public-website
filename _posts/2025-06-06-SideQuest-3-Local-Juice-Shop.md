@@ -10,6 +10,11 @@ nvm install v22.14.0
 sudo apt-get install libgtk2.0-0 libgtk-3-0 libgbm-dev libnotify-dev libnss3 libxss1 libasound2 libxtst6 xauth xvfb
 ```
 
+Because the app is meant to be vulnerable, there will be a lot of audit failures:
+```
+42 vulnerabilities (1 low, 15 moderate, 19 high, 7 critical)
+```
+
 Then run the app with `npm start`
 ```
 > juice-shop@17.3.0 start
@@ -76,3 +81,7 @@ describe('/#/score-board', () => {
 And when we run it, we see both test cases passing:
 
 ![image](https://github.com/user-attachments/assets/39a13cf7-3e10-45f6-b44d-32ee4a4ac40c)
+
+![image](https://github.com/user-attachments/assets/be5350a2-1c9a-4c55-b031-886f91eb5bf8)
+
+![image](https://github.com/user-attachments/assets/3b4dca4e-6eef-40f1-9ed8-4a8b5c7b6b98)
