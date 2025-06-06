@@ -1,6 +1,6 @@
 ---
 title: "Lesson 15 - BDD with Cypress"
-date: 2025-06-06
+date: 2025-06-06 17:00:00 -0000
 ---
 I'd like to use BDD with Cypress to test the [OWASP Juice Shop](https://github.com/juice-shop/juice-shop).
 
@@ -172,4 +172,106 @@ And the new test passes:
 
 ![image](https://github.com/user-attachments/assets/c4ffbed0-b0d2-4713-b8c4-434a4e152940)
 
+# Run in CI
+We can trigger a test run as a Github Action whenever we push changes to the tests (or application):
+```yaml
+name: "CI/CD Pipeline"
+on:
+  push:
+    branches: [ "master" ]
+    paths-ignore:
+      - '*.md'
+      - 'LICENSE'
+      - 'monitoring/grafana-dashboard.json'
+      - 'screenshots/**'
+    tags-ignore:
+      - '*'
+  pull_request:
+    paths-ignore:
+      - '*.md'
+      - 'LICENSE'
+      - 'data/static/i18n/*.json'
+      - 'frontend/src/assets/i18n/*.json'
+env:
+  NODE_DEFAULT_VERSION: 20
 
+jobs:
+  e2e:
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        os: [ubuntu-latest]
+        browser: [chrome] 
+      fail-fast: false
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: "Use Node.js"
+        uses: actions/setup-node@39370e3970a6d050c480ffad4ff0ed4d3fdee5af #v4.1.0
+        with:
+          node-version: ${{ env.NODE_DEFAULT_VERSION }}
+      
+      - name: "Install application"
+        run: npm install
+      
+      - name: "Execute end-to-end tests on Ubuntu"
+        if: ${{ matrix.os == 'ubuntu-latest' }}
+        uses: cypress-io/github-action@v6
+        with:
+          install: false
+          browser: ${{ matrix.browser }}
+          start: npm start
+          wait-on: http://localhost:3000
+```
+
+I implemented this as a matrix in case I want to use other browsers or OSes at any point.
+
+The results can be seen in the run console:
+```
+...
+
+────────────────────────────────────────────────────────────────────────────────────────────────────
+                                                                                                    
+  Running:  score_board.feature                                                             (2 of 2)
+
+
+  Score Board
+info: Solved 1-star scoreBoardChallenge (Score Board)
+info: Cheat score for tutorial scoreBoardChallenge solved in 1min (expected ~1min) with hints allowed: 0.42679999999999996
+    ✓ Hidden Score Board can be opened (1526ms)
+
+
+  1 passing (2s)
+
+
+  (Results)
+
+  ┌────────────────────────────────────────────────────────────────────────────────────────────────┐
+  │ Tests:        1                                                                                │
+  │ Passing:      1                                                                                │
+  │ Failing:      0                                                                                │
+  │ Pending:      0                                                                                │
+  │ Skipped:      0                                                                                │
+  │ Screenshots:  0                                                                                │
+  │ Video:        false                                                                            │
+  │ Duration:     1 second                                                                         │
+  │ Spec Ran:     score_board.feature                                                              │
+  └────────────────────────────────────────────────────────────────────────────────────────────────┘
+
+
+====================================================================================================
+
+  (Run Finished)
+
+
+       Spec                                              Tests  Passing  Failing  Pending  Skipped  
+  ┌────────────────────────────────────────────────────────────────────────────────────────────────┐
+  │ ✔  basic.feature                            00:01        1        1        -        -        - │
+  ├────────────────────────────────────────────────────────────────────────────────────────────────┤
+  │ ✔  score_board.feature                      00:01        1        1        -        -        - │
+  └────────────────────────────────────────────────────────────────────────────────────────────────┘
+    ✔  All specs passed!                        00:03        2        2        -        -        -
+```
+And in the run summary:
+
+![image](https://github.com/user-attachments/assets/fb6bf0f0-4291-4686-86df-9d0cdd091fea)
