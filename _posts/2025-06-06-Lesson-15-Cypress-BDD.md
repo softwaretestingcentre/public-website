@@ -1,6 +1,6 @@
 ---
 title: "Lesson 15 - BDD with Cypress"
-date: 2025-06-06 17:00:00 -0000
+date: 2025-06-06 16:00:00 -0000
 ---
 I'd like to use BDD with Cypress to test the [OWASP Juice Shop](https://github.com/juice-shop/juice-shop).
 
