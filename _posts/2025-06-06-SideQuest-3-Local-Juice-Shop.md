@@ -1,6 +1,6 @@
 ---
 title: "Side Quest 3 - Testing Juice Shop locally"
-date: 2025-06-06
+date: 2025-06-06 09:00:00 -0000
 ---
 While I was looking at the code for [OWASP's Juice Shop](https://github.com/juice-shop/juice-shop) I noticed it contains some Cypress tests, so lets try to run them locally.
 
