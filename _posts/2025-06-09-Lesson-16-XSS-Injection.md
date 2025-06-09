@@ -11,14 +11,14 @@ We are going to try to get an alert message to appear:
 
 # Setup
 
-Switching back to Serenity BDD, we create a feature file for the second challenge:
+Switching back to Serenity BDD (because Cypress has an alert-handling bug), we create a feature file for the second challenge:
 ```gherkin
 Feature: Juice Shop is susceptible to XSS attacks
 
   Scenario: Haxxor injects HTML into the search input
     Given Haxxor goes to the Juice Shop
     When she injects HTML into the search input
-    Then she sees an alert message
+    Then she sees an alert message containing "xss"
     And she sees she has solved the "DOM XSS" challenge
 ```
 
@@ -29,9 +29,9 @@ We need new step definitions:
         actor.wasAbleTo(JuiceShop.searchFor("<iframe id='injection' src='javascript:alert(\"xss\")'>"));
     }
 
-    @Then("{actor} sees an alert message")
-    public void sheSeesAnAlertMessage(Actor actor) {
-        actor.attemptsTo(JuiceShop.alertIsEqualTo("xss"));
+    @Then("{actor} sees an alert message containing {string}")
+    public void sheSeesAnAlertMessage(Actor actor, String alertMessage) {
+        actor.attemptsTo(JuiceShop.alertIsEqualTo(alertMessage));
     }
 
 
