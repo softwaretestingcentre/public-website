@@ -101,8 +101,42 @@ And helper methods:
     }
 ```
 
+# Refactoring
+There were a couple of things I wasn't happy about:
+- Handling cookies through the UI
+- Hiding test data in the Step Definition
 
+> ❗ Using the UI for cookie handling could introduce flakiness
 
+So I added an event handler to the `HomePage` PageObject to set the cookies and refresh the page:
+```java
+    @WhenPageOpens
+    public void setCookies() {
+        if (getDriver().manage().getCookieNamed("cookieconsent_status") == null) {
+            getDriver().manage().addCookie(new Cookie("cookieconsent_status", "dismiss"));
+            getDriver().manage().addCookie(new Cookie("welcomebanner_status", "dismiss"));
+            getDriver().manage().addCookie(new Cookie("language", "en"));
+            getDriver().navigate().refresh();
+        }
+    }
+```
 
+> ❗ Test input data should be in the Scenario, where it can be reviewed more easily
 
+I also moved the XSS value from the Step Definition to the Scenario:
+```gherkin
+  Scenario: Haxxor injects HTML into the search input
+    Given Haxxor goes to the Juice Shop
+    When she searches for "<iframe src=\"javascript:alert(`xss`)\">"
+    Then she sees an alert message containing "xss"
+    And she sees she has solved the "DOM XSS" challenge
+```
 
+> ℹ️ Note that I had to use the _exact_ quotes that the Challenge is expecting before it would be marked as solved
+
+```java
+    @When("{actor} searches for {string}")
+    public void sheSearchesFor(Actor actor, String searchTerm) {
+        actor.wasAbleTo(JuiceShop.searchFor(searchTerm));
+    }
+```
