@@ -75,3 +75,11 @@ Scenario: Haxxor injects HTML into the search input
   And she sees she has solved the "DOM XSS" challenge              
 [INFO] Tests run: 2, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 20.40 s
 ```
+
+And we can quickly add a scenario for Challenge 3 just by writing a new Scenario in `xss-injection.feature`:
+```gherkin
+ Scenario: Haxxor can inject a payload into the page
+    Given Haxxor goes to the Juice Shop
+    When she searches for "<iframe width=\"100%\" height=\"166\" scrolling=\"no\" frameborder=\"no\" allow=\"autoplay\" src=\"https://w.soundcloud.com/player/?url=https%3A//api.soundcloud.com/tracks/771984076&color=%23ff5500&auto_play=true&hide_related=false&show_comments=true&show_user=true&show_reposts=false&show_teaser=true\"></iframe>"
+    Then she sees she has solved the "Bonus Payload" challenge
+```
