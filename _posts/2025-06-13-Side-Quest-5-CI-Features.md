@@ -55,7 +55,7 @@ Then I deliberately broke the test and pushed it again:
     Then she sees she has solved the "Reflected XSS" challenge
 ```
 
-And the test failure is named in the summary:
+And the failing test is named in the summary:
 
 ![image](https://github.com/user-attachments/assets/d8e0bd71-ffd5-4c61-8c15-5b01de9fbb98)
 
