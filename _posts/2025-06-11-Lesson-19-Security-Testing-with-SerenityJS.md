@@ -110,10 +110,10 @@ export const ScoreBoard = {
 
     confirmChallengeSolved: (challengeName: string) => 
         Task.where(`#actor confirms that ${challengeName} has been solved`,
-            Send.a(GetRequest.to('/api/Challenges/?sort=name')),
+            Send.a(GetRequest.to(`/api/Challenges/?name=${challengeName}`)),
             Ensure.that(
-                LastResponse.body<ChallengeData>().data
-                .find((challenge) => challenge.name === challengeName)
+                LastResponse.body<ChallengeData>()
+                .data[0]
                 .solved,
                 isTrue()
             )
