@@ -122,12 +122,10 @@ export const ScoreBoard = {
 };
 
 interface ChallengeData {
-    status: string,
     data: Challenge[]
 }
 
 interface Challenge {
-    name: string,
     solved: boolean
 }
 ```
