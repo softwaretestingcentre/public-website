@@ -83,6 +83,8 @@ def check_challenge(context, challenge_name):
     assert check_challenge_solved(context, challenge_name)
 ```
 
+> ℹ️ Note that the {} construct isn't strictly needed for Behave, but VS Code gets confused if you include a parameter name
+
 For the ui helpers, we are going to use Playwright methods via the `context.page` object initialised in `environment.py` before the tests run :
 ```python
 # /features/steps/ui/juice_shop_ui.py
