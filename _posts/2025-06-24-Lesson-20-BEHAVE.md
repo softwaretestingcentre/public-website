@@ -94,7 +94,7 @@ pages = {
     "Score Board": "/score-board"
 }
 
-def open_shop(context):dict
+def open_shop(context):
     context.page.goto(f"{context.base_url}/#/")
 
 def open_page(context, page):
