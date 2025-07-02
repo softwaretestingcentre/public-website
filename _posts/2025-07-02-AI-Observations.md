@@ -22,8 +22,8 @@ I had some thoughts while this was going on:
 | What I saw | What I thought |
 |-------|--------|
 | The original requirement was a simple behaviour and a list of test inputs/outputs | This is already a well-specified test, what are we gaining from AI?<br><br>QA should have already worked with the requirement author to make sure the specification is testable |
-| The AI tool seemed to be churning for a minute | <ul><li>Why does this take any time at all?</li><li>Where is the data going?</li><li>What is the cost/impact of AI doing this while the QA sits idly watching?</li></ul> |
-| A list of test cases is produced | <ul><li>How are QAs meant to learn the **craft** of writing tests?</li><li>Are we really saving any time at all when QA will need to review every test?</li><li>No test framework will scale if every test is created individually</li></ul> |
+| The AI tool seemed to be churning for a minute | Why does this take any time at all?<br><br>Where is the data going?<br><br>What is the cost/impact of AI doing this while the QA sits idly watching? |
+| A list of test cases is produced | How are QAs meant to learn the **craft** of writing tests?<br><br>Are we really saving any time at all when QA will need to review every test?<br><br>No test framework will scale if every test is created individually |
 | The tests include a lot of UI element visibility checks | It's painful to see system-level tests that just check the structure of the UI | 
 
 # AI writing non-functional test cases
