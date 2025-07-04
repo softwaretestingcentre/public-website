@@ -15,9 +15,9 @@ All I had to do was add the [github-deploy-action](https://github.com/JamesIves/
         folder: target/site/serenity
         clean: true
 
-  - name: Link to Results
-        run:
-          echo "[Test Results](https://softwaretestingcentre.github.io/security-testing/)" >> $GITHUB_STEP_SUMMARY
+    - name: Link to Results
+      run:
+        echo "[Test Results](https://softwaretestingcentre.github.io/security-testing/)" >> $GITHUB_STEP_SUMMARY
 
 ```
 And change the **Settings/Actions/General/Workflow Permissions** for the repo to read/write:
