@@ -14,12 +14,19 @@ All I had to do was add the [github-deploy-action](https://github.com/JamesIves/
         branch: gh-pages
         folder: target/site/serenity
         clean: true
+
+  - name: Link to Results
+        run:
+          echo "[Test Results](https://softwaretestingcentre.github.io/security-testing/)" >> $GITHUB_STEP_SUMMARY
+
 ```
 And change the **Settings/Actions/General/Workflow Permissions** for the repo to read/write:
 
 ![image](https://github.com/user-attachments/assets/ae2803cf-1915-4aaa-8780-a8a596ca13f0)
 
 And now every time I push to the repo, the tests run and publish the results to the repo's [github pages](https://softwaretestingcentre.github.io/security-testing/).
+
+![image](https://github.com/user-attachments/assets/1f539847-cacb-4249-b859-427ad77aab4c)
 
 Which is much easier than downloading them as an artifact and opening them locally.
 
@@ -69,15 +76,3 @@ After we fix the test, we can see the effect on the results:
 
 ![image](https://github.com/user-attachments/assets/fc212998-7677-4676-a4a3-b37e68560758)
 
-# Alternative Action when that doesn't work
-This Action does not recognise the test results from Serenity/JS, so I created an alternative job for the `serenity-js-cucumber-playwright-template` repo:
-
-```yaml
-      - name: Publish Results
-        run:
-          echo "[Test Results](https://softwaretestingcentre.github.io/serenity-js-cucumber-playwright-template/)" >> $GITHUB_STEP_SUMMARY
-```
-
-And when the job runs, we get a link to the results page in the Job Summary:
-
-![image](https://github.com/user-attachments/assets/f1d41135-b5e1-40a3-93c1-b0030a774af4)
