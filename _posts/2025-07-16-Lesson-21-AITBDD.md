@@ -4,7 +4,7 @@ date: 2025-07-02
 ---
 Although I didn't think much of the experience of using AI to generate tests, there is an obvious link between BDD and the current fad for prompt engineering:
 
-> What if the specification _was_ the code?
+> What if the specification WAS the code?
 
 Now we know BDD is meant to be a dynamic specification (not test) language, so can we use BDD scenarios to prompt AI to build an app?
 
