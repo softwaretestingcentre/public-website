@@ -16,7 +16,7 @@ Say Felicity is a Data Centre Site Manager and she wants an application to help 
 
 Outlining that as a BDD feature, we can start to create scenarios, e.g.
 
-```gherkin
+``` gherkin
 Feature: Manage Site
   As a Facility Manager, I want to:
     View my site performance
@@ -80,7 +80,7 @@ Using the serenity/js framework, write the step definitions for the "Facility Ma
 
 The results are ... puzzling:
 
-```Typescript
+``` typescript
 Given('Felicity has opened their portal', async function () {
     await actorCalled('Felicity').attemptsTo(
         Navigate.to('/src/site-manager.html')
@@ -115,7 +115,7 @@ I guess it's not bad at a first attempt, maybe some more prompting about using t
 
 ### So how would you do it?
 
-```gherkin
+``` typescript
 // facility-management.steps.ts
 Given('{actor} has opened their portal', async (actor: Actor) => 
     actor.attemptsTo(
@@ -136,7 +136,7 @@ Then('{pronoun} see(s) that the KPI data is current', async (actor: Actor, data:
 )
 ```
 
-```Typescript
+``` typescript
 // User.ts
 export const User = {
     login: () =>
@@ -146,7 +146,7 @@ export const User = {
 }
 ```
 
-```Typescript
+``` typescript
 // Data.ts
 export const Data = {
 
