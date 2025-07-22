@@ -137,8 +137,7 @@ These locators are used with Serenity/JS's `PageElement` and `PageElements` for 
 
 ---
 
-> [!CAUTION]
-> The locators it found in `User.ts` no longer exist
+> :warning The locators it found in `User.ts` no longer exist
 
 This is the entire content of `User.ts`:
 ```typescript
@@ -153,13 +152,11 @@ export const User = {
 }
 ```
 
-> [!CAUTION]
-> Even if I specifically instruct it to refresh its view of the files, it still picks up these zombie locators from somewhere. 🧟
+> ⚠️ Even if I specifically instruct it to refresh its view of the files, it still picks up these zombie locators from somewhere. 🧟
 >
-> Clicking the `User.ts` file link in the chat takes me to the **only** version of this file that exists in the workspace, so I'm baffled. 🤷‍♂️
+> ✖️ Clicking the `User.ts` file link in the chat takes me to the **only** version of this file that exists in the workspace, so I'm baffled. 🤷‍♂️
 
-> [!TIP]
-> The only way to get past this was to run the analysis on just the `User.ts` file, then repeat it for the `/test` folder.
+> ℹ️ The only way to get past this was to run the analysis on just the `User.ts` file, then repeat it for the `/test` folder.
 
 ### Here are all the web locators used by objects defined in the test folder:
 
@@ -226,8 +223,7 @@ Let's try to help it out by changing the locator:
 ```
 
 And refind the locators
-> [!CAUTION]
-> Again, I had to focus on `Explainer.ts` before it would update its view of the locators properly 🤦
+> ⚠️ Again, I had to focus on `Explainer.ts` before it would update its view of the locators properly 🤦
 
 And it seems happier now:
 
@@ -274,12 +270,11 @@ All locators in the test folder are consistent with the elements and attributes 
 
 ---
 
-> [!IMPORTANT]
-> We need to be careful how we define selectors for GPT to recognise them properly
-> Its view of the locators after any change to the test code needs to be carefully refreshed
+> ℹ️ We need to be careful how we define selectors for GPT to recognise them properly
+>
+> ℹ️ Its view of the locators after any change to the test code needs to be carefully refreshed
 
-> [!WARNING]
-> It still looks for the zombie login locators - but chooses to ignore the fact that they don't exist
+> ⚠️ It still looks for the zombie login locators - but chooses to ignore the fact that they don't exist
 
 # What happens when we update the application?
 
@@ -354,13 +349,12 @@ Here is a comparison of all locators in the test folder versus those defined or 
 
 ---
 
-> [!CAUTION]
-> Again, it is just not updating its view (of the application code this time)
-> It fails to pick up the new id in the table 🧐
+> ⚠️ Again, it is just not updating its view (of the application code this time)
+>
+> ⚠️ It fails to pick up the new id in the table 🧐
 
 # Summary - No
 Honestly this turned out much worse than I expected, for the entirely unexpected reason that GPT seems to ignore file changes at random.
 As a result, it was a lot of work, considering I am only dealing with a tiny application with a handful of locators.
 
-> [!CAUTION]
-> NOT RECOMMENDED
+> ✖️ NOT RECOMMENDED
