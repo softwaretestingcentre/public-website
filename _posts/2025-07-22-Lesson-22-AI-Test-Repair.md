@@ -137,7 +137,7 @@ These locators are used with Serenity/JS's `PageElement` and `PageElements` for 
 
 ---
 
-> :warning The locators it found in `User.ts` no longer exist
+> ⚠️ The locators it found in `User.ts` no longer exist
 
 This is the entire content of `User.ts`:
 ```typescript
